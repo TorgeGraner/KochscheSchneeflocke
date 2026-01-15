@@ -1,7 +1,9 @@
 # Koch Snowflake
 Draws the Koch Snowflake of any given recursion depth iteratively, since $\LaTeX$ does not support recursion.
 
-This is achieved by partitioning the curve into four sectors, labeled 0-3, corresponding to the left segment (0), the left leg (1), the right leg (2) and the right segment (3).
+This is achieved by partitioning the curve into four sectors, labeled 0-3, corresponding to the left segment (0), the left leg (1), the right leg (2) and the right segment (3). The peak of a line segment can be calculated by
+
+$$p=p_{start}+\frac{1}{2}\left(p_{end}-p_{start}\right)+\frac{1}{2\sqrt{3}}Rot_{90}\cdot(p_{end}-p_{start}).$$
 
 To get the coordinates of the $n$-th point $p_n$, calculate the 4-ary expansion of $n$. The $(n-k)$-th digit $d$ of $n$ describes, that $p_n$ lies in the $d$-th sector of recursion depth $k$. Reset the start and end point accordingly until max_depth is reached. 
 
