@@ -1,0 +1,78 @@
+\documentclass[a4paper, 11pt]{scrartcl}
+\usepackage{tikz}
+
+% Draws an edge of the snowflake between (#1,#2) and (#3,#4) with recursion depth #5
+\newcommand{\snowflakeEdge}[5]{
+    \ifnum#5 = 0
+        \draw (#1,#2) -- (#3,#4);
+    \else
+        % Number of points (4^#5 would have 2#5 digits)
+        \pgfmathtruncatemacro\pow{4^#5 - 1}
+        \foreach\i in {0, 1, ..., \pow} {
+            \edef\j{\the\numexpr#5 - 1}
+            % Starting point
+            \edef\spx{#1}
+            \edef\spy{#2}
+            % Ending point
+            \edef\epx{#3}
+            \edef\epy{#4}
+
+            \loop
+                % Get j-th digit in base 4 expansion of i
+                \pgfmathtruncatemacro\digit{mod(floor(\i/(4^\j)), 4)}
+                % Difference vector of start and end point
+                \pgfmathsetmacro\vecx{\epx - \spx}
+                \pgfmathsetmacro\vecy{\epy - \spy}
+                % Reset the starting and edge point according to whether the digit of the numbe in base 4 is in one of the sectors
+                \ifnum \digit = 0
+                    \pgfmathsetmacro\epx{\spx + 0.3333 * \vecx}
+                    \pgfmathsetmacro\epy{\spy + 0.3333 * \vecy}
+                \fi
+
+                \ifnum \digit = 1
+                    \pgfmathsetmacro\epx{\spx + 0.5 * \vecx - 0.2886 * \vecy}
+                    \pgfmathsetmacro\epy{\spy + 0.5 * \vecy + 0.2886 * \vecx}
+
+                    \pgfmathsetmacro\spx{\spx + 0.3333 * \vecx}
+                    \pgfmathsetmacro\spy{\spy + 0.3333 * \vecy}
+                \fi
+
+                \ifnum \digit = 2
+                    \pgfmathsetmacro\epx{\spx + 0.6666 * \vecx}
+                    \pgfmathsetmacro\epy{\spy + 0.6666 * \vecy}
+
+                    \pgfmathsetmacro\spx{\spx + 0.5 * \vecx - 0.2886 * \vecy}
+                    \pgfmathsetmacro\spy{\spy + 0.5 * \vecy + 0.2886 * \vecx}
+                \fi
+
+                \ifnum \digit = 3
+                    \pgfmathsetmacro\spx{\spx + 0.6666 * \vecx}
+                    \pgfmathsetmacro\spy{\spy + 0.6666 * \vecy}
+                \fi
+                \edef\j{\the\numexpr\j - 1}
+            \ifnum\j>-1
+            \repeat
+            \draw node (\i) at (\spx, \spy) {};
+        }
+        % Draw all segments
+        \pgfmathtruncatemacro\power{4^#5}
+        \draw node (\power) at (#3, #4) {};
+        \draw\foreach\i in {0, ..., \pow} {(\i.center) -- (\the\numexpr\i+1.center)};
+    \fi
+}
+
+% Draws a koch snowflake of scale #1 with recursion depth #2
+\newcommand\kochSnowflake[2]{
+    \pgfmathsetmacro\xxb{#1*cos(60)}
+    \pgfmathsetmacro\yyb{#1*sin(60)}
+    \pgfmathsetmacro\xxc{#1*cos(-60)}
+    \pgfmathsetmacro\yyc{#1*sin(-60)}
+    
+    \snowflakeEdge{-#1}{0}{\xxb}{\yyb}{#2}
+    \snowflakeEdge{\xxb}{\yyb}{\xxc}{\yyc}{#2}
+    \snowflakeEdge{\xxc}{\yyc}{-#1}{0}{#2}
+}
+
+\begin{document}
+    \begin{center}\begin{tikzpicture}\kochSnowflake{5}{5}\end{tikzpicture}\end{center}
+\end{document}
