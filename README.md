@@ -5,7 +5,7 @@ This is achieved by partitioning the curve into four sectors, labeled 0-3, corre
 
 $$p=p_{start}+\frac{1}{2}\left(p_{end}-p_{start}\right)+\frac{1}{2\sqrt{3}}Rot_{90}\cdot(p_{end}-p_{start}).$$
 
-To get the coordinates of the $n$-th point $p_n$, calculate the 4-ary expansion of $n$. The $(n-k)$-th digit $d$ of $n$ describes, that $p_n$ lies in the $d$-th sector of recursion depth $k$. Reset the start and end point accordingly until max_depth is reached. 
+To get the coordinates of the $n$-th point $p_n$, calculate the 4-ary expansion of $n$. The digits describe, in which sector the $p_n$ lies in a given recursion depth. Reset the start and end point accordingly until max_depth is reached. 
 
 E.g. $11=23_4$ , implying $p_{11}$ lies in sector 3 of depth 2 of sector 2 of depth 1. With max_depth=2, $p_{11}$ is the starting point of precisely that segment.
 
